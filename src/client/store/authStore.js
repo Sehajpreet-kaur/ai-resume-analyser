@@ -13,7 +13,7 @@ API.interceptors.request.use((config) => {
 
 export const useAuthStore = create(
   persist(
-    (set, get) => ({
+    (set) => ({
       user:      null,
       token:     null,
       isLoading: false,
@@ -34,8 +34,10 @@ export const useAuthStore = create(
         try {
           const { data } = await API.post("/auth/login", { email, password });
           set({ user: data.user, token: data.token, isLoading: false });
+          return data;
         } catch (err) {
           set({ error: err.response?.data?.message || "Login failed.", isLoading: false });
+          throw err;
         }
       },
 
@@ -65,7 +67,6 @@ export const useAuthStore = create(
       },
 
       clearError: () => set({ error: null }),
-      isLoggedIn: () => Boolean(get().token && get().user),
     }),
     { name: "auth-storage", partialize: (s) => ({ token: s.token, user: s.user }) }
   )
