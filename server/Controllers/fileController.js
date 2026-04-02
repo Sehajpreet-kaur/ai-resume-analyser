@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import File from "../../Models/File.js";
+import File from "../Models/File.js";
 
 // POST /api/files/upload  (multer puts file on req.file)
 export const uploadFile = async (req, res) => {

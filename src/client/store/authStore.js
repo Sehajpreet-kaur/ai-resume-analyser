@@ -23,9 +23,11 @@ export const useAuthStore = create(
         set({ isLoading: true, error: null });
         try {
           const { data } = await API.post("/auth/register", { username, email, password });
-          set({ user: data.user, token: data.token, isLoading: false });
+          set({ isLoading: false });
         } catch (err) {
-          set({ error: err.response?.data?.message || "Registration failed.", isLoading: false });
+          const message = err.response?.data?.message || "Registration failed.";
+          set({ error: message, isLoading: false });
+          throw new Error(message);
         }
       },
 
@@ -36,8 +38,9 @@ export const useAuthStore = create(
           set({ user: data.user, token: data.token, isLoading: false });
           return data;
         } catch (err) {
-          set({ error: err.response?.data?.message || "Login failed.", isLoading: false });
-          throw err;
+          const message = err.response?.data?.message || "Login failed.";
+          set({ error: message, isLoading: false });
+          throw new Error(message);
         }
       },
 
@@ -52,7 +55,9 @@ export const useAuthStore = create(
           const { data } = await API.get("/auth/me");
           set({ user: data.user, isLoading: false });
         } catch (err) {
-          set({ error: err.response?.data?.message || "Failed to fetch user.", isLoading: false });
+          const message = err.response?.data?.message || "Failed to fetch user.";
+          set({ error: message, isLoading: false });
+          throw new Error(message);
         }
       },
 
@@ -62,7 +67,9 @@ export const useAuthStore = create(
           const { data } = await API.put("/auth/me", updates);
           set({ user: data.user, isLoading: false });
         } catch (err) {
-          set({ error: err.response?.data?.message || "Update failed.", isLoading: false });
+          const message = err.response?.data?.message || "Update failed.";
+          set({ error: message, isLoading: false });
+          throw new Error(message);
         }
       },
 

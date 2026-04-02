@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/Auth/UserModel.js";
-import Session from "../models/Auth/SessionModel.js";
+import User from "../Models/User.js"
+import Session from "../Models/SessionModel.js";
 
 export const protect = async (req, res, next) => {
   try {

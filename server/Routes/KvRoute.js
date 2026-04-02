@@ -1,6 +1,6 @@
 import express from "express";
-import { protect } from "../../controllers/AuthMiddleware.js";
-import { getKey, setKey, deleteKey, listKeys, flushKeys } from "../../controllers/kvController.js";
+import { protect } from "../Controllers/AuthMiddleware.js"
+import { getKey, setKey, deleteKey, listKeys, flushKeys } from "../Controllers/kvController.js"
 
 const router = express.Router();
 

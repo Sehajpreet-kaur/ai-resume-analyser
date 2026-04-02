@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { useLocation, useNavigate } from 'react-router-dom'
+import {toast} from "sonner"
 
 function Login() {
   const { isLoading, user, token, login ,error:storeError} = useAuthStore()
@@ -15,7 +16,7 @@ function Login() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (isAuthenticated) navigate(next, { replace: true })
+    if (isAuthenticated) navigate(next)
   }, [isAuthenticated, next, navigate])
 
   useEffect(() => {
@@ -26,24 +27,25 @@ function Login() {
     e.preventDefault()
     setError('')
     if (!email || !password) {
-      setError('Email and password are required.')
+      toast.error('Email and password are required.',{position:"top-center"})
       return
     }
     try {
       await login(email, password)   // store sets user + token on success
-      navigate('/', { replace: true })
     } catch {
-      setError('Login failed. Please check your credentials and try again.')
+      toast.error('Login failed. Please check your credentials and try again.',{position:"top-center"})
+      setEmail('')
+      setPassword('')
     }
   }
 
   return (
     <main className='bg-[url("/images/bg-auth.svg")] bg-cover min-h-screen flex items-center justify-center'> 
         <div className='gradient-border shadow-lg'>
-            <div className='flex flex-cols w-[600px] items-center max-w-3xl rounded-2xl overflow-hidden bg-white'>
+            <div className='flex flex-cols w-150 items-center max-w-3xl rounded-2xl overflow-hidden bg-white'>
          
             <section className='flex flex-col items-center justify-center gap-8 bg-white rounded-2xl p-10 w-full'>
-                <div className='text-3xl font-bold w-[400px] text-center'>
+                <div className='text-2xl font-bold w-100 text-center'>
                     <h1>Welcome</h1>
           <form onSubmit={handleSubmit} className="flex flex-col items-center  gap-4 w-full max-w-sm">
             <label className="flex flex-col gap-1 text-sm w-full text-center">
@@ -72,7 +74,6 @@ function Login() {
               />
             </label>
 
-            {error && <p className="text-xs text-red-500">{error}</p>}
 
             <button type="submit" className="w-full primary-gradient rounded-full cursor-pointer text-3xl font-semibold text-gray-800" disabled={isLoading}>
               {isLoading ? 'Signing in...' : 'Log in'}

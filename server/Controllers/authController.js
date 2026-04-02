@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../../Models/User.js";
-import Session from "../../Models/SessionModel.js";
+import User from "../Models/User.js"
+import Session from "../Models/SessionModel.js"
 
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -11,8 +11,9 @@ const signToken = (id) =>
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
-
-    const exists = await User.findOne({ $or: [{ email }, { username }] });
+    if (!username || !email || !password)
+      return res.status(400).json({ message: "Username, email, and password are required." });
+  const exists = await User.findOne({ email });
     if (exists)
       return res.status(409).json({ message: "Email or username already taken." });
 
@@ -24,6 +25,7 @@ export const register = async (req, res) => {
       user: { id: user._id, username: user.username, email: user.email, role: user.role },
     });
   } catch (err) {
+    console.error("Registration error:", err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -34,8 +36,13 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password)
       return res.status(400).json({ message: "Email and password are required." });
+    console.log("Login attempt for email:", email);
 
     const user = await User.findOne({ email }).select("+password");
+    console.log("User found:", user);        // ← add this
+    console.log("Password in DB:", user?.password); // ← add this
+    const passwordMatch = await user.comparePassword(password);
+    console.log("Password match:", passwordMatch); // ← add this
     if (!user || !(await user.comparePassword(password)))
       return res.status(401).json({ message: "Invalid credentials." });
 

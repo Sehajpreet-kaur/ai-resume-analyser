@@ -1,6 +1,6 @@
 // controllers/AI/AIController.js
 
-import Chat from "../../Models/ChatModel.js";
+import Chat from "../Models/ChatModel.js";
 import groq from "../utils/groqClient.js";  // ✅ only one import, ESM style
 
 // POST /api/ai/chat  — start or continue a conversation

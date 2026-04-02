@@ -1,4 +1,4 @@
-import KV from "../../Models/KvModel.js";
+import KV from "../Models/KvModel.js";
 
 // GET /api/kv/:key
 export const getKey = async (req, res) => {

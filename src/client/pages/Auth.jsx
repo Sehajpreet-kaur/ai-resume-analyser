@@ -14,7 +14,7 @@ function Auth() {
 
     //if user access secured route without being authenticated , they will redirect to auth or if authenticated navigate to next
     useEffect(()=>{
-        if(isAuthenticated) navigate(next);
+        if(isAuthenticated) navigate('next');
     },[isAuthenticated,next,navigate])
 
   return (

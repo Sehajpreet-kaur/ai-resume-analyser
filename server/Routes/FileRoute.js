@@ -1,14 +1,14 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import { protect } from "../../controllers/AuthMiddleware.js";
+import { protect } from "../Controllers/AuthMiddleware.js";
 import {
   uploadFile,
   getMyFiles,
   getFileById,
   deleteFile,
   toggleVisibility,
-} from "../../controllers/fileController.js";
+} from "../Controllers/fileController.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
