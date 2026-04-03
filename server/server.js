@@ -24,7 +24,7 @@ app.use(
     cors({
         //client-side url-origin
         origin:process.env.CLIENT_BASE_URL || 'http://localhost:5173',
-        methods:['GET','POST','DELETE','PUT'],
+        methods:['GET','POST','DELETE','PUT','PATCH'],
         allowedHeaders:[
             "Content-Type",
             "Authorization",
@@ -43,7 +43,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/ai", AiRouter);   
 app.use("/api/auth",AuthRouter)
-app.use("/api/file",FileRouter)
+app.use("/api/files",FileRouter)
 app.use("/api/kv",KvRouter)
 
 //404 fallback

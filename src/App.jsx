@@ -7,6 +7,7 @@ import Login from './client/pages/Login.jsx'
 import Register from './client/pages/Register.jsx'
 import { Toaster } from 'sonner'
 import GuestRoute from './client/components/GuestRoute.jsx'
+import Upload from './client/pages/Upload.jsx'
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
       <Route path='/auth/register' element={
         <GuestRoute><Register /></GuestRoute>
       } />
-      
+      <Route path="/upload" element={<Upload />} />
     </Routes>
     </>
   )

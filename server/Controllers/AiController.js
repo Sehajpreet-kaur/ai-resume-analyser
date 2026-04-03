@@ -1,7 +1,9 @@
 // controllers/AI/AIController.js
 
 import Chat from "../Models/ChatModel.js";
-import groq from "../utils/groqClient.js";  // ✅ only one import, ESM style
+import groq from "../utils/groqClient.js";  
+import fs from "fs";
+import path from "path";
 
 // POST /api/ai/chat  — start or continue a conversation
 export const sendMessage = async (req, res) => {
@@ -81,6 +83,50 @@ export const deleteChat = async (req, res) => {
     if (!chat) return res.status(404).json({ message: "Chat not found." });
     res.json({ message: "Chat deleted." });
   } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// POST /api/ai/feedback — analyze resume image
+export const analyzeFeedback = async (req, res) => {
+  try {
+    const { imagePath, instructions } = req.body;
+
+    if (!imagePath || !instructions)
+      return res.status(400).json({ message: "imagePath and instructions are required." });
+
+    const absolutePath = path.resolve(imagePath);
+    if (!fs.existsSync(absolutePath))
+      return res.status(404).json({ message: "File not found: " + absolutePath });
+
+    const base64Image = fs.readFileSync(absolutePath).toString("base64");
+
+    const response = await groq.chat.completions.create({
+      model: "meta-llama/llama-4-scout-17b-16e-instruct", 
+      max_tokens: 2048,
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "image_url",
+              image_url: {
+                url: `data:image/png;base64,${base64Image}`,
+              },
+            },
+            {
+              type: "text",
+              text: instructions,
+            },
+          ],
+        },
+      ],
+    });
+
+    const text = response.choices[0].message.content;
+    res.json({ feedback: text });
+  } catch (err) {
+    console.error("AI Feedback Error:", err);
     res.status(500).json({ message: err.message });
   }
 };

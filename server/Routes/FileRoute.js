@@ -30,7 +30,16 @@ const router = express.Router();
 
 router.use(protect);
 
-router.post("/upload",              upload.single("file"), uploadFile);
+router.post("/upload", (req, res, next) => {
+  upload.single("file")(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ message: `Multer error: ${err.message}` });
+    } else if (err) {
+      return res.status(400).json({ message: err.message }); // e.g. "File type not allowed."
+    }
+    next();
+  });
+}, uploadFile);
 router.get("/",                     getMyFiles);
 router.get("/:id",                  getFileById);
 router.delete("/:id",               deleteFile);

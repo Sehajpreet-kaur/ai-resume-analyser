@@ -38,6 +38,20 @@ export const useAIStore = create((set, get) => ({
     }
   },
 
+  feedback: async (imagePath, instructions) => {
+  set({ isLoading: true, error: null });
+  try {
+    const { data } = await API.post("/ai/feedback", {
+      imagePath,
+      instructions,
+    });
+    set({ isLoading: false });
+    return data.feedback;
+  } catch (err) {
+    set({ error: err.response?.data?.message || "Feedback failed.", isLoading: false });
+  }
+},
+
   fetchChats: async () => {
     set({ isLoading: true, error: null });
     try {
