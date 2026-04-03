@@ -236,5 +236,6 @@ export const prepareInstructions = ({ jobTitle, jobDescription }) =>
   The job title is: ${jobTitle}
   The job description is: ${jobDescription}
   Provide the feedback using the following format: ${AIResponseFormat}
+  All scores must be out of 100 (e.g. overallScore: 85, not 8.5 or 8).
   Return the analysis as a JSON object, without any other text and without the backticks.
   Do not include any other text or comments.`
