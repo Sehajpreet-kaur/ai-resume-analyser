@@ -70,7 +70,12 @@ function Upload() {
 
         const feedbackText= feedback // assuming it's a JSON string
 
-        data.feedback = JSON.parse(feedbackText) //parse feedback to json and update data
+        const cleanedText = feedbackText
+          .replace(/```json/g, '')
+          .replace(/```/g, '')
+          .trim()
+
+        data.feedback = JSON.parse(cleanedText) //parse feedback to json and update data
 
         await kv.set(`resume:${uuid}`, JSON.stringify(data)) //update data in kv with feedback;
 
