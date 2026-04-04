@@ -1,22 +1,41 @@
 import React from 'react'
 import Navbar from '../components/Navbar.jsx'
-import { resumes } from '../constants/index.js'
 import ResumeCard from '../components/ResumeCard.jsx'
 import { useAuthStore } from '../store/authStore.js'
-import { useNavigate } from 'react-router'
-import { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router'
+import { useEffect,useState } from 'react'
+import { useKVStore } from '../store/kvStore.js'
+
 
 function Home() {
 
     const {isLoading,user,token,login,logout}=useAuthStore();
     const isAuthenticated=Boolean(user && token)
+    const {list}=useKVStore();
 
     const navigate=useNavigate();
+    const [resumes,setResumes]=useState([]);
+    const [loadingResumes,setLoadingResumes]=useState(false);
 
     //if user access secured route without being authenticated , they will redirect to auth or if authenticated navigate to next page,
     useEffect(()=>{
         if(!isAuthenticated) navigate('/auth?next=/');
     },[isAuthenticated,navigate])
+
+    useEffect(()=>{
+      const loadResumes=async()=>{
+        setLoadingResumes(true);  
+
+        const resumes=await list('resume:');
+        const parseResumes=resumes?.map((resume)=>(
+          JSON.parse(resume.value) 
+        )) ?? []
+        console.log("Loaded resumes:", parseResumes);
+        setResumes(parseResumes || []);
+        setLoadingResumes(false);
+      }
+      loadResumes();
+    },[])
 
   return (
     <div>
@@ -25,12 +44,24 @@ function Home() {
         <section className='main-section'>
           <div className='page-heading py-16'>
             <h1>Track Your Applications & Resume Ratings</h1>
-            <h2>Review your submissions and check Ai-powered feedback</h2>
+            {
+              !loadingResumes && resumes.length === 0 ? (
+                <h2>No resumes found. Upload your first resume to get feedback.</h2>
+              ):(
+                <h2>Review your submissions and check Ai-powered feedback</h2>
+              )
+            }
           </div>
-        
+            {
+              loadingResumes && (
+                <div className='flex flex-col items-center justify-center'>
+                  <img src='/images/resume-scan-2.gif' className='w-[200px]' />
+                </div>
+              )
+            }
 
         {
-          resumes.length >0 && (
+          !loadingResumes && resumes.length >0 && (
             <div className='resumes-section'>
             {
               resumes.map((resume)=>(
@@ -38,6 +69,15 @@ function Home() {
               ))
             }
         </div>
+          )
+        }
+        {
+          !loadingResumes && resumes.length === 0 && (
+            <div className='flex flex-col items-center justify-center mt-10 gap-4'>
+              <Link to="/upload" className='primary-button w-fit text-xl font-semibold' >
+                Upload Resume
+              </Link>
+            </div>
           )
         }
 

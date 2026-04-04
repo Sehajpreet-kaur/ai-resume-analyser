@@ -52,8 +52,8 @@ function Upload() {
       //use uuid by formatting data
       const data={
         id:uuid,
-        resumePath:uploadedFile.path,
-        imagePath:uploadedImage.path,
+        resumePath:uploadedFile.url,
+        imagePath:uploadedImage.url,
         companyName, jobTitle, jobDescription,
         feedback: '', //fill it ai anaylsis
       }
@@ -62,7 +62,7 @@ function Upload() {
       setStatusText("Analyzing... ")
 
       const feedback =await ai.feedback(
-        uploadedImage.path,
+        uploadedImage.url,
         prepareInstructions({jobTitle,jobDescription})  //from constants/index.js
       )
 

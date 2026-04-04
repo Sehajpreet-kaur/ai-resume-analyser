@@ -11,7 +11,7 @@ export const useFileStore = create((set) => ({
       const response = await API.get(fileUrl, {
         responseType: "arraybuffer",
       });
-      return response.data;
+      return new Blob([response.data], { type: response.headers['content-type'] });
     } catch (err) {
       set({ error: err.response?.data?.message || "Read failed." });
       return null;
