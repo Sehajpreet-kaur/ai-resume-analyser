@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { API } from "./authStore.js";
 
 export const useKVStore = create((set) => ({
+  kv:         null,
   records:   {},   // { [key]: value }
   isLoading: false,
   error:     null,
@@ -17,7 +18,7 @@ export const useKVStore = create((set) => ({
     }
   },
 
-  set: async (key, value, ttlSeconds) => {
+  save: async (key, value, ttlSeconds) => {
     set({ isLoading: true, error: null });
     try {
       const { data } = await API.put(`/kv/${key}`, { value, ttlSeconds });

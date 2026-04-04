@@ -15,7 +15,7 @@ function Upload() {
   const { user, token } = useAuthStore();
   const fs = useFileStore();
   const ai = useAIStore();
-  const kv = useKVStore();
+  const {save:kvSave} = useKVStore();
   const navigate = useNavigate();
 
   const [isProcessing,setIsProcessing]=useState(false)
@@ -58,7 +58,7 @@ function Upload() {
         feedback: '', //fill it ai anaylsis
       }
       //store data in kv with uuid as key, and data as value
-      await kv.set(`resume:${uuid}`, JSON.stringify(data)) 
+      await kvSave(`resume:${uuid}`, JSON.stringify(data)) 
       setStatusText("Analyzing... ")
 
       const feedback =await ai.feedback(
@@ -75,13 +75,19 @@ function Upload() {
           .replace(/```/g, '')
           .trim()
 
-        data.feedback = JSON.parse(cleanedText) //parse feedback to json and update data
+        try {
+          data.feedback = JSON.parse(cleanedText) //parse feedback to json and update data
+        } catch (error) {
+          console.error('JSON Parse Error:', error.message)
+          console.error('Cleaned text:', cleanedText)
+          return setStatusText("Error: Failed to parse AI feedback. Invalid JSON response.")
+        }
 
-        await kv.set(`resume:${uuid}`, JSON.stringify(data)) //update data in kv with feedback;
+        await kvSave(`resume:${uuid}`, JSON.stringify(data)) //update data in kv with feedback;
 
         setStatusText("Analysis complete! Redirecting...")
         console.log(data)
-        navigate('/')
+        navigate(`/resume/${uuid}`) //redirect to resume page with uuid as param
   }
 
   function handleSubmit(e){

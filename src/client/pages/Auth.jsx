@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef,useMemo } from 'react'
 import { useAuthStore } from '../store/authStore'
 import { useLocation, useNavigate } from 'react-router';
 import Login from './Login';
@@ -9,13 +9,20 @@ function Auth() {
     const isAuthenticated=Boolean(user && token)
 
     const location=useLocation();
-    const next=new URLSearchParams(location.search).get('next') || '/';
+    const next = useMemo(
+            () => new URLSearchParams(location.search).get('next') || '/',
+            [location.search]
+        );
     const navigate=useNavigate();
+    const hasNavigated=useRef(false);
 
     //if user access secured route without being authenticated , they will redirect to auth or if authenticated navigate to next
     useEffect(()=>{
-        if(isAuthenticated) navigate('next');
-    },[isAuthenticated,next,navigate])
+        if(isAuthenticated && !hasNavigated.current) {
+            hasNavigated.current=true;
+            navigate(next);
+        }
+    },[isAuthenticated,next])
 
   return (
     <main className="bg-[url('/images/bg-auth.svg')] bg-cover min-h-screen flex items-center justify-center">

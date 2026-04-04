@@ -6,6 +6,18 @@ export const useFileStore = create((set) => ({
   isLoading: false,
   error:     null,
 
+  read: async (fileUrl) => {
+    try {
+      const response = await API.get(fileUrl, {
+        responseType: "arraybuffer",
+      });
+      return response.data;
+    } catch (err) {
+      set({ error: err.response?.data?.message || "Read failed." });
+      return null;
+    }
+  },
+
   upload: async (file) => {
     set({ isLoading: true, error: null });
     try {
