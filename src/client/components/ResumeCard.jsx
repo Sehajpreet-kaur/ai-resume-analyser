@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import ScoreCircle from './ScoreCircle'
 
 function ResumeCard({id,companyName,jobTitle,feedback,imagePath}) {
-  const imageUrl=imagePath? `http://localhost:5000/${imagePath}` : null; 
+  const imageUrl=imagePath? `http://localhost:5000${imagePath}` : null; 
   
 
   return (

@@ -9,6 +9,7 @@ import { Toaster } from 'sonner'
 import GuestRoute from './client/components/GuestRoute.jsx'
 import Upload from './client/pages/Upload.jsx'
 import Resume from './client/pages/Resume.jsx'
+import WipeApp from './client/pages/Wipe.jsx'
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
       } />
       <Route path="/upload" element={<Upload />} />
       <Route path='/resume/:id' element={<Resume />}/>
+      <Route path='/wipe' element={<WipeApp />} />
     </Routes>
     </>
   )

@@ -95,7 +95,9 @@ export const analyzeFeedback = async (req, res) => {
     if (!imagePath || !instructions)
       return res.status(400).json({ message: "imagePath and instructions are required." });
 
-    const absolutePath = path.resolve(imagePath);
+    const relativePath = imagePath.startsWith("/") ? imagePath.slice(1) : imagePath;
+    const absolutePath = path.resolve(relativePath);
+
     if (!fs.existsSync(absolutePath))
       return res.status(404).json({ message: "File not found: " + absolutePath });
 
