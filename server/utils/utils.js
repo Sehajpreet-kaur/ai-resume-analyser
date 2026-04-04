@@ -1,3 +1,6 @@
+import clsx from "clsx";
+import { twMerge } from "tailwind-merge";
+
 export const formatBytes = (bytes) => {
   if (bytes === 0) return "0 B";
   const units = ["B", "KB", "MB", "GB", "TB"];
@@ -9,4 +12,9 @@ export const formatBytes = (bytes) => {
 
 export const generateUUID = () => {
     return crypto.randomUUID();
+}
+
+//for accordion
+export function cn(...inputs) {
+  return twMerge(clsx(inputs));
 }
