@@ -32,7 +32,7 @@ function Auth() {
                     <h1>Welcome</h1>
                     <h2>Log In to continue your Job Journey</h2>
                 </div>
-                <div>
+                <div className='flex flex- row justify-center'>
                     {
                         isLoading ?(
                             <button className='auth-button animate-pulse'>

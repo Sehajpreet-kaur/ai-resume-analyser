@@ -26,10 +26,13 @@ function Resume() {
                 if (!isAuthenticated) navigate(`/auth?next=/resume/${id}`);
             }, [isLoading, isAuthenticated, id]);
 
-    const toUrl = (p) => {
-        const clean = p.replace(/\\/g, '/').replace(/^\//, '');
-        return `http://localhost:5000/${clean}`;
-    };
+        const toUrl = (p) => {
+            const base = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            // strip "/api" suffix if present, since file paths aren't under /api
+            const origin = base.replace('/api', '');
+            const clean = p.replace(/\\/g, '/').replace(/^\//, '');
+            return `${origin}/${clean}`;
+        };
 
     //to fetch data from ai analysis using id as key from kv store, and display it in the page
     useEffect(()=>{
