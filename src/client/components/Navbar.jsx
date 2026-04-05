@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router'
+import Logout from './Logout'
 
 function Navbar() {
   return (
@@ -7,9 +8,12 @@ function Navbar() {
         <Link to="/">
             <p className='text-2xl font-bold text-gradient'>RESUMIND</p>
         </Link>
-        <Link to="/upload" className='primary-button w-fit'>
+        <div className='flex flex-row justify-between gap-4'>
+          <Link to="/upload" className='primary-button w-fit'>
             Upload Resume
         </Link>
+        <Logout />
+        </div>
     </nav>
   )
 }
