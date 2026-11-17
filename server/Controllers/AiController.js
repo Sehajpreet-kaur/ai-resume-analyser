@@ -8,8 +8,8 @@ import path from "path";
 // POST /api/ai/chat  — start or continue a conversation
 export const sendMessage = async (req, res) => {
   try {
-    const { message, chatId, model = "llama3-8b-8192" } = req.body;
-    //                                  ↑ ✅ Step 4 change: Groq free model name
+    const { message, chatId, model = "openai/gpt-oss-120b" } = req.body;
+    
     
     if (!message) return res.status(400).json({ message: "Message is required." });
 
@@ -104,7 +104,7 @@ export const analyzeFeedback = async (req, res) => {
     const base64Image = fs.readFileSync(absolutePath).toString("base64");
 
     const response = await groq.chat.completions.create({
-      model: "meta-llama/llama-4-scout-17b-16e-instruct", 
+      model: "openai/gpt-oss-120b", 
       max_tokens: 2048,
       messages: [
         {
