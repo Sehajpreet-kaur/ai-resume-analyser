@@ -104,7 +104,7 @@ export const analyzeFeedback = async (req, res) => {
     const base64Image = fs.readFileSync(absolutePath).toString("base64");
 
     const response = await groq.chat.completions.create({
-      model: "openai/gpt-oss-120b", 
+      model: "meta-llama/llama-4-scout-17b-16e-instruct", 
       max_tokens: 2048,
       messages: [
         {
